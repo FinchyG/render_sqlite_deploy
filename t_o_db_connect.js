@@ -21,7 +21,9 @@ app.get("/", (req, res, next) => {
     res.json({"message":"REST API OK"})
 })
 
-// retrieving all row
+// ____login_details route_______
+
+// retrieving all rows
 app.get("/login_details", (req, res, next) => {
     var sql = "select * from login_details";
     var params = []
@@ -122,6 +124,53 @@ app.delete("/login_details/:id", (req, res, next) => {
                 return;
             }
             res.json({"message":"deleted", changes: this.changes})
+    });
+});
+
+// _____tournament_details route____
+
+// retrieving all rows
+app.get("/tournament_details", (req, res, next) => {
+    var sql = "select * from tournament_details";
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "message":"success",
+            "data":rows
+        })
+      });
+});
+
+// updating a row
+app.put("/tournament_details/:id", (req, res, next) => {
+    var data = {
+        name: req.body.name,
+        date: req.body.date,
+        location_name: req.body.location_name,
+        location_postcode: req.body.location_postcode
+    }
+    db.run(
+        `UPDATE tournament_details set 
+           name = COALESCE(?,name), 
+           date = COALESCE(?,date),
+           location_name = COALESCE(?,location_name),
+           location_postcode = COALESCE(?,location_postcode) 
+           WHERE id = ?`,
+        [data.name, data.date, data.location_name, data.location_postcode, req.params.id],
+        function (err, result) {
+            if (err){
+                res.status(400).json({"error": res.message})
+                return;
+            }
+            res.json({
+                message: "success",
+                data: data,
+                changes: this.changes
+            })
     });
 });
 

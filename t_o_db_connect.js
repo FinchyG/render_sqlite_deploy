@@ -39,10 +39,10 @@ app.get("/login_details", (req, res, next) => {
       });
 });
 
-// retrieving one row
-app.get("/login_details/:id", (req, res, next) => {
-    var sql = "select * from login_details where id = ?"
-    var params = [req.params.id]
+// retrieving one row by username
+app.get("/login_details/:username", (req, res, next) => {
+    var sql = "select * from login_details where username = ?"
+    var params = [req.params.username]
     db.get(sql, params, (err, row) => {
         if (err) {
           res.status(400).json({"error":err.message});

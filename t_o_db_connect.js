@@ -148,19 +148,19 @@ app.get("/tournament_details", (req, res, next) => {
 // updating a row
 app.put("/tournament_details/:id", (req, res, next) => {
     var data = {
-        name: req.body.name,
-        date: req.body.date,
+        tournament_name: req.body.tournament_name,
+        tournament_date: req.body.tournament_date,
         location_name: req.body.location_name,
         location_postcode: req.body.location_postcode
     }
     db.run(
         `UPDATE tournament_details set 
-           name = COALESCE(?,name), 
-           date = COALESCE(?,date),
+           tournament_name = COALESCE(?,tournament_name), 
+           tournament_date = COALESCE(?,tournament_date),
            location_name = COALESCE(?,location_name),
            location_postcode = COALESCE(?,location_postcode) 
            WHERE id = ?`,
-        [data.name, data.date, data.location_name, data.location_postcode, req.params.id],
+        [data.tournament_name, data.tournament_date, data.location_name, data.location_postcode, req.params.id],
         function (err, result) {
             if (err){
                 res.status(400).json({"error": res.message})
